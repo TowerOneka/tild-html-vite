@@ -1,0 +1,51 @@
+@import "@/shared/styles/colors";
+@import "@/shared/styles/mixins";
+
+.root {
+}
+
+.preset {
+  &-p {
+    font-size: size(16);
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+
+  &-formTitle {
+    font-size: size(36);
+    font-style: normal;
+    font-weight: 700;
+    line-height: size(40);
+  }
+}
+
+.color {
+  &-black {
+    color: $black;
+  }
+
+  &-fuchsia {
+    color: $fuchsia;
+  }
+
+  &-gradient {
+    background: $gradient;
+    background-clip: text;
+    color: transparent;
+  }
+
+  &-deepLilac {
+    color: $deepLilac;
+  }
+
+  &-darkOrchid {
+    color: $darkOrchid;
+  }
+}
+
+.textAlign {
+  &-center {
+    text-align: center;
+  }
+}

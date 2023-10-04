@@ -1,0 +1,14 @@
+@import "@/shared/styles/colors";
+@import "@/shared/styles/mixins";
+
+.root {
+  display: flex;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.logo {
+  width: size(400);
+  flex-shrink: 0;
+}

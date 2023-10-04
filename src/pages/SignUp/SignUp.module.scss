@@ -1,0 +1,55 @@
+@import "@/shared/styles/mixins";
+@import "@/shared/styles/colors";
+
+.title {
+  margin-bottom: size(20);
+}
+
+.nameFields {
+  display: flex;
+  gap: size(30);
+}
+
+.formWrapper {
+  height: auto;
+  overflow: auto;
+  margin: size(20) 0;
+  padding: size(18) size(40) size(20);
+  background-color: $white;
+  box-shadow: 0 0 size(50) 0 $blueViolet;
+  border-radius: size(8);
+  scrollbar-width: thin;
+  scrollbar-color: $darkOrchid transparent;
+
+  &::-webkit-scrollbar {
+    width: size(5); /* ширина scrollbar */
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent; /* цвет дорожки */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $darkOrchid; /* цвет плашки */
+    border-radius: 20px; /* закругления плашки */
+    border: 3px solid transparent; /* padding вокруг плашки */
+  }
+
+  z-index: 5;
+}
+
+.header {
+  // width: auto;
+  margin-bottom: size(30);
+  z-index: 5;
+}
+
+.fieldsWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: size(20);
+}
+
+.button {
+  align-self: center;
+}

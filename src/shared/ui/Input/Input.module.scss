@@ -1,0 +1,63 @@
+@import "@/shared/styles/mixins";
+@import "@/shared/styles/colors";
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: size(10);
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+}
+
+.label {
+  font-weight: 400;
+  margin-bottom: size(8);
+}
+
+.wrapper {
+}
+
+.colorSchema {
+  &-primary {
+    border-radius: size(8);
+    border: size(1) solid $darkOrchid;
+
+    @include transition(border-color);
+
+    .input {
+      color: $fuchsia;
+    }
+
+    .input::placeholder {
+      color: $fuchsia;
+    }
+
+    &.focused {
+      border-color: $blueViolet;
+    }
+  }
+}
+
+.sizeSchema {
+  &-primary {
+    padding: size(20);
+    font-size: size(16);
+  }
+}
+
+.textSchema {
+  &-p .input {
+    font-size: size(16);
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+}
+
+.rightIconWrapper {
+  flex-shrink: 0;
+}

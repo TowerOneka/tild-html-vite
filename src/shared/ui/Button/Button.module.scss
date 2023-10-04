@@ -1,0 +1,69 @@
+@import "@/shared/styles/colors";
+@import "@/shared/styles/mixins";
+
+.root {
+  cursor: pointer;
+}
+
+.colorSchema {
+  &-gradient {
+    position: relative;
+    color: $white;
+    overflow: hidden;
+    z-index: 2;
+
+    // @include transition(background-position);
+
+    span {
+      position: relative;
+      z-index: 2;
+    }
+
+    &::after {
+      position: absolute;
+      content: "";
+      inset: 0; /* same as { top: 0; right: 0; bottom: 0; left: 0; } */
+      // background-image: linear-gradient(to bottom, red, orange);
+      background: $gradient;
+      opacity: 1;
+      transition: opacity 0.25s linear;
+      z-index: 1;
+    }
+
+    &::before {
+      position: absolute;
+      content: "";
+      inset: 0; /* same as { top: 0; right: 0; bottom: 0; left: 0; } */
+      background: $gradientHover;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.25s linear;
+    }
+
+    &:hover {
+      &:before {
+        opacity: 1;
+      }
+
+      &::after {
+        opacity: 0;
+      }
+    }
+  }
+}
+
+.sizeSchema {
+  &-primary {
+    padding: size(22) size(23);
+    border-radius: 8px;
+  }
+}
+
+.textSchema {
+  &-p {
+    font-size: size(16);
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+}

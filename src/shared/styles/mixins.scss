@@ -1,0 +1,28 @@
+$baseScreenSize: 1920;
+$mobileScreenSize: 375;
+
+$t-ease: linear;
+$t-time: 0.15s;
+
+@function size($pixels) {
+  @return calc(((#{$pixels} / var(--screen-size)) * 100) * 1vw);
+}
+
+@mixin desktop() {
+  @media only screen and (min-width: 1025px) {
+    @content;
+  }
+}
+
+@mixin mobile() {
+  @media only screen and (max-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin transition($prop...) {
+  -moz-transition: $prop $t-time $t-ease;
+  -o-transition: $prop $t-time $t-ease;
+  -webkit-transition: $prop $t-time $t-ease;
+  transition: $prop $t-time $t-ease;
+}

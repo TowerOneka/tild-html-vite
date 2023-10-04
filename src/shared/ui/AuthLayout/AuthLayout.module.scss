@@ -1,0 +1,91 @@
+@import "@/shared/styles/colors";
+@import "@/shared/styles/mixins";
+
+.root {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0.8;
+  background: none;
+
+  background: linear-gradient(120deg, $fuchsia 0%, $blueViolet 50%, $fuchsia 100%);
+  background-size: 400% 400%;
+
+  animation: AnimationName 5s linear infinite;
+
+  // --overlay-color-1: /* rgba(192, 105, 180, 70%) */ #000;
+  // --overlay-color-2: /* rgba(114, 55, 221, 70%) */ #fff;
+  // --anim-duration: 3s;
+
+  // &::after,
+  // &::before {
+  //   content: "";
+  //   display: block;
+  //   position: absolute;
+  //   backdrop-filter: blur(30px);
+  //   top: 0;
+  //   bottom: 0;
+  //   left: 0;
+  //   right: 0;
+  // }
+
+  // &::before {
+  //   background: linear-gradient(
+  //     135deg,
+  //     var(--overlay-color-2) 0%,
+  //     var(--overlay-color-1) 50%,
+  //     var(--overlay-color-2) 100%
+  //   );
+  //   animation: OpacityAnim var(--anim-duration) ease-in 0s infinite alternate;
+  // }
+
+  // &::after {
+  //   background: linear-gradient(
+  //     135deg,
+  //     var(--overlay-color-1) 0%,
+  //     var(--overlay-color-2) 50%,
+  //     var(--overlay-color-1) 100%
+  //   );
+  //   animation: OpacityAnim var(--anim-duration) ease-in-out calc(-1 * var(--anim-duration)) infinite alternate;
+  // }
+}
+
+// @keyframes OpacityAnim {
+//   0% {
+//     opacity: 1;
+//   }
+//   100% {
+//     opacity: 0;
+//   }
+// }
+
+.bgOpacity {
+  z-index: 3;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($color: #fff, $alpha: 0.3);
+}
+
+.childrenWrapper {
+  z-index: 5;
+  // width: 284px;
+}
+
+@keyframes AnimationName {
+  0% {
+    background-position: 0% 100%;
+  }
+  50% {
+    background-position: 100% 0%;
+  }
+  100% {
+    background-position: 0% 100%;
+  }
+}
