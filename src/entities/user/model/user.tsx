@@ -102,6 +102,8 @@ export const AuthProvider = ({ children }: Props) => {
     [loginTokenHandler],
   );
 
+  const signUpHanlder = useCallback(async () => {}, []);
+
   const refreshTokenCallback = useCallback(async () => {
     const fp = await FingerprintJS.load();
 
