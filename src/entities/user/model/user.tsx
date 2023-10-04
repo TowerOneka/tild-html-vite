@@ -6,17 +6,17 @@ import { createContext, useMemo, useState, useCallback, useEffect } from "react"
 
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import { auth } from "@/shared/api";
-import { SignInRequest, SignInResponse } from "@/shared/api/auth/api";
+import { SignInRequest, SignInResponse, SignUpRequest } from "@/shared/api/auth/api";
 
-type TokenState = {
-  accessToken: string;
-  expireAt: string;
-};
+// type TokenState = {
+//   accessToken: string;
+//   expireAt: string;
+// };
 
 export type AuthState = {
   user: User | null;
   authStatus: AuthStatus;
-  token: TokenState | null;
+  // token: accessToken | null;
   refresh: () => void;
   login: (value: Omit<SignInRequest, "fingerprint">) => void;
   logout: () => void;
@@ -26,18 +26,18 @@ type Props = {
   children: React.ReactNode;
 };
 
-const calcTimeRemaining = (expirationTime: string) => {
-  const currentTime = new Date().getTime();
-  const adjExpireTime = new Date(expirationTime).getTime();
-  const remaingDuration = adjExpireTime - currentTime;
+// const calcTimeRemaining = (expirationTime: string) => {
+//   const currentTime = new Date().getTime();
+//   const adjExpireTime = new Date(expirationTime).getTime();
+//   const remaingDuration = adjExpireTime - currentTime;
 
-  return remaingDuration;
-};
+//   return remaingDuration;
+// };
 
 export const AuthContext = createContext({} as AuthState);
 
 export const AuthProvider = ({ children }: Props) => {
-  const [token, setToken] = useState<TokenState | null>(null);
+  // const [token, setToken] = useState<string | null>(null);
 
   const [user, setUser] = useState<User | null>(null);
   const [authStatus, setAuthStatus] = useState<AuthStatus>("initial");
@@ -47,46 +47,35 @@ export const AuthProvider = ({ children }: Props) => {
 
     if (tokenFromStorage && isValidJson(tokenFromStorage)) {
       const { refreshToken: _, ...serializedToken } = JSON.parse(tokenFromStorage);
-      setToken(serializedToken);
+      // setToken(serializedToken);
       setAuthStatus("authorized");
     }
   }, []);
 
   const logoutHandler = () => {
-    setToken(null);
+    // setToken(null);
     localStorage.removeItem("token");
     setAuthStatus("unauthorized");
   };
 
   const loginTokenHandler = useCallback((data: SignInResponse) => {
-    const { refreshToken: _, ...serializedToken } = data.token;
+    const { accessToken } = data.token;
 
     setUser(data.user);
 
-    setToken(serializedToken);
+    // setToken(accessToken);
 
     setAuthStatus("authorized");
 
-    localStorage.setItem("token", JSON.stringify(serializedToken));
-
-    const expirationTime = serializedToken.expireAt;
-
-    const remainingTime = calcTimeRemaining(expirationTime);
-    setTimeout(logoutHandler, remainingTime);
+    localStorage.setItem("token", JSON.stringify(accessToken));
   }, []);
 
   const setTokenHandler = useCallback((data: TokenResponse) => {
-    const { refreshToken: _, ...serializedToken } = data;
+    const { accessToken } = data;
 
-    setToken(serializedToken);
     setAuthStatus("authorized");
 
-    localStorage.setItem("token", JSON.stringify(serializedToken));
-
-    const expirationTime = serializedToken.expireAt;
-
-    const remainingTime = calcTimeRemaining(expirationTime);
-    setTimeout(logoutHandler, remainingTime);
+    localStorage.setItem("token", JSON.stringify(accessToken));
   }, []);
 
   const loginCallback = useCallback(
@@ -102,7 +91,18 @@ export const AuthProvider = ({ children }: Props) => {
     [loginTokenHandler],
   );
 
-  const signUpHanlder = useCallback(async () => {}, []);
+  const signUpHanlder = useCallback(
+    async (args: SignUpRequest) => {
+      const fp = await FingerprintJS.load();
+
+      const { visitorId: fingerprint } = await fp.get();
+
+      const { data } = await auth.api.signUp(args);
+
+      loginTokenHandler(data);
+    },
+    [loginTokenHandler],
+  );
 
   const refreshTokenCallback = useCallback(async () => {
     const fp = await FingerprintJS.load();
@@ -119,13 +119,13 @@ export const AuthProvider = ({ children }: Props) => {
       user,
       authStatus,
       // setAuthStatus,
-      token,
+      // token,
       setUser,
       login: loginCallback,
       refresh: refreshTokenCallback,
       logout: logoutHandler,
     }),
-    [authStatus, loginCallback, refreshTokenCallback, token, user],
+    [authStatus, loginCallback, refreshTokenCallback, user],
   );
 
   return <AuthContext.Provider value={store}>{children}</AuthContext.Provider>;

@@ -1,16 +1,12 @@
-import { auth } from "@/shared/api";
 import { useEffect } from "react";
-
-import FingerprintJS from "@fingerprintjs/fingerprintjs";
+import { useAuthContext } from ".";
 
 export const useInitialCheckAuth = () => {
-  useEffect(() => {
-    const getStartAuth = async () => {
-      const fp = await FingerprintJS.load();
-    };
+  const { refresh } = useAuthContext();
 
+  useEffect(() => {
     if (localStorage.getItem("token")) {
-      getStartAuth();
+      refresh();
     }
-  }, []);
+  }, [refresh]);
 };

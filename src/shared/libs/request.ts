@@ -1,5 +1,4 @@
 import axios, { AxiosRequestConfig } from "axios";
-// import { getCookie } from "cookies-next";
 
 export enum Methods {
   GET = "GET",
@@ -8,19 +7,21 @@ export enum Methods {
   DELETE = "DELETE",
 }
 
+const axiosWithAuth = axios.create({
+  withCredentials: true,
+  baseURL: import.meta.env.VITE_BASE_URL,
+});
+
+axiosWithAuth.interceptors.request.use((config) => {
+  config.headers.Authorization = `Bearer ${localStorage.getItem("token")}`;
+
+  return config;
+});
+
 export const requestWithAuth = <T>(method: Methods, { headers: optsHeader, ...opts }: AxiosRequestConfig) => {
-  const token = localStorage.getItem("token");
-
-  const headers = {
-    ...optsHeader,
-    Authorization: `Bearer ${token}`,
-  };
-
-  return axios.request<T>({
+  return axiosWithAuth.request<T>({
     ...opts,
-    headers,
     method,
-    baseURL: `${process.env.NEXT_PUBLIC_API_URL}`,
   });
 };
 
