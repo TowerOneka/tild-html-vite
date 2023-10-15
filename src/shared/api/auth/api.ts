@@ -1,6 +1,7 @@
-import { Methods, request } from "@/shared/libs/request";
-import { User } from "./models";
+import { Methods, request, requestWithAuth } from "@/shared/libs/request";
+// import { User } from "./models";
 import { TokenResponse } from "./types";
+import { User } from "@/entities/user/model/types";
 
 export type SignUpPayload = {
   firstName: string;
@@ -18,10 +19,7 @@ export type SignUpRequest = {
   username: string;
 };
 
-export type SignUpResponse = {
-  token: TokenResponse;
-  user: User;
-};
+export type SignUpResponse = User;
 
 export type SignInRequest = {
   email: string;
@@ -56,7 +54,7 @@ export const signIn = (data: SignInRequest) =>
   });
 
 export const refreshToken = (data: RefreshRequest) =>
-  request<TokenResponse>(Methods.POST, {
+  requestWithAuth<TokenResponse>(Methods.POST, {
     url: "/auth/refresh",
     data,
   });

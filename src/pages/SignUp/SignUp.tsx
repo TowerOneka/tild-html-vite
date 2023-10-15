@@ -7,12 +7,23 @@ import Button from "@/shared/ui/Button";
 import ShortHeader from "@/shared/ui/ShortHeader";
 import InputPassword from "@/shared/ui/InputPassword";
 import { AnimatePresence, motion } from "framer-motion";
-// import { useSearchParams } from "next/navigation";
-import { auth } from "@/shared/api";
 import AuthLayout from "@/shared/ui/AuthLayout";
-// import { signIn } from "next-auth/react";
+// import { useAuthContext } from "@/entities/user/hooks";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useActionsCreator } from "@/app/store/hooks";
+import { signUpThunk } from "@/entities/user/model/thunks";
+
+const allActions = {
+  signUp: signUpThunk,
+};
 
 const SignUp = () => {
+  const { signUp } = useActionsCreator(allActions);
+
+  const location = useLocation();
+
+  const navigate = useNavigate();
+
   const [fields, setFields] = useState({
     firstName: "",
     lastName: "",
@@ -35,17 +46,9 @@ const SignUp = () => {
 
       const { repeatPassword: _, ...values } = fields;
 
-      await auth.api.signUp({
-        ...values,
-      });
-
-      // signIn("credentials", {
-      //   email: fields.email,
-      //   password: fields.password,
-      //   callbackUrl: "/profile",
-      // });
+      signUp(values).then(() => navigate(location.state?.from.pathname || "/profile"));
     },
-    [fields],
+    [fields, location.state?.from.pathname, navigate, signUp],
   );
 
   return (
@@ -76,7 +79,16 @@ const SignUp = () => {
             />
 
             <Text textAlign="center">
-              Есть аккаунт? <Text to="/sign-in">Войти?</Text>
+              Есть аккаунт?{" "}
+              <Text
+                to="/sign-in"
+                state={
+                  !!location.state?.from && location.state.from.pathname.startsWith("/")
+                    ? location.state.from
+                    : undefined
+                }>
+                Войти?
+              </Text>
             </Text>
 
             <Button className={s.button} type="submit" colorSchema="gradient">

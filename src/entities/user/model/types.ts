@@ -13,4 +13,9 @@ export type User = {
   fingerprint: string;
 };
 
-export type AuthStatus = "initial" | "unauthorized" | "authorized" | "error";
+export type AuthStatus = "init" | "loading" | "authorized" | "unauthorized" | "error";
+
+export type UserState = {
+  user: User | null;
+  authStatus: AuthStatus;
+};

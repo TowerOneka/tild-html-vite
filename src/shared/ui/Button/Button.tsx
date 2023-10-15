@@ -12,10 +12,17 @@ type Props = {
   sizeSchema?: "primary";
   className?: string;
   as?: "button" | "a";
-  to?: string;
-  href?: string;
+
   children: string;
-};
+} & (
+  | {
+      to?: string;
+      href?: never;
+      onClick?: React.HTMLProps<HTMLAnchorElement>["onClick"];
+    }
+  | { href?: string; to?: never; onClick?: React.HTMLProps<HTMLAnchorElement>["onClick"] }
+  | { onClick?: React.HTMLProps<HTMLButtonElement>["onClick"]; href?: never; to?: never }
+);
 
 const Button = ({
   colorSchema = "gradient",
@@ -26,6 +33,7 @@ const Button = ({
   to,
   className,
   type,
+  onClick,
   children,
   ...props
 }: Props) => {
@@ -44,6 +52,7 @@ const Button = ({
         className={cx(s.root, className, mods, {
           /* [s.centerFlex]: centerFlex */
         })}
+        onClick={onClick}
         {...props}>
         {children}
       </Link>
@@ -56,6 +65,7 @@ const Button = ({
         // [s.centerFlex]: centerFlex,
         // [s.isProcess]: isLoading,
       })}
+      onClick={onClick}
       type={CustomTag === "button" ? type : undefined}
       {...props}>
       <span>{children}</span>

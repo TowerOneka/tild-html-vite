@@ -1,16 +1,27 @@
 import ShortHeader from "@/shared/ui/ShortHeader";
-import React, { useCallback, useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 import s from "./Login.module.scss";
 import Input from "@/shared/ui/Input";
 import Text from "@/shared/ui/Text";
 import InputPassword from "@/shared/ui/InputPassword/InputPassword";
 import Button from "@/shared/ui/Button";
 import { AnimatePresence, motion } from "framer-motion";
-
-import FingerprintJS from "@fingerprintjs/fingerprintjs";
 import AuthLayout from "@/shared/ui/AuthLayout";
+import { useLocation, useNavigate } from "react-router-dom";
+import { loginThunk } from "@/entities/user/model/thunks";
+import { useActionsCreator } from "@/app/store/hooks";
+
+const allActions = {
+  login: loginThunk,
+};
 
 const Login = () => {
+  const location = useLocation();
+
+  const { login } = useActionsCreator(allActions);
+
+  const navigate = useNavigate();
+
   const [fields, setFields] = useState({
     email: "",
     password: "",
@@ -23,22 +34,19 @@ const Login = () => {
     }));
   }, []);
 
-  const handleSubmitForm: React.FormEventHandler<HTMLFormElement> = useCallback(async (event) => {
-    event.preventDefault();
+  const handleSubmitForm: React.FormEventHandler<HTMLFormElement> = useCallback(
+    async (event) => {
+      event.preventDefault();
 
-    const formData = new FormData(event.currentTarget);
-
-    const fp = await FingerprintJS.load();
-
-    const { visitorId: fingerprint } = await fp.get();
-
-    // const res = await signIn("credentials", {
-    //   email: formData.get("email"),
-    //   password: formData.get("password"),
-    //   fingerprint,
-    //   redirect: false,
-    // });
-  }, []);
+      await login({
+        email: fields.email,
+        password: fields.password,
+      }).then(() => {
+        navigate(location.state?.from?.pathname || "/profile");
+      });
+    },
+    [fields.email, fields.password, location.state?.from.pathname, login, navigate],
+  );
 
   return (
     <AuthLayout>
@@ -55,7 +63,16 @@ const Login = () => {
           <Input placeholder="Почта" name="email" onChange={handleChangeField} value={fields.email} />
           <InputPassword placeholder="Пароль" name="password" onChange={handleChangeField} value={fields.password} />
           <Text>
-            Нет аккаунта? <Text to={`/sign-up`}>Зарегистрироваться?</Text>
+            Нет аккаунта?{" "}
+            <Text
+              to="/sign-up"
+              state={
+                !!location.state.from && location.state.from?.pathname?.startsWith("/")
+                  ? location.state.from
+                  : undefined
+              }>
+              Зарегистрироваться?
+            </Text>
           </Text>
           <Button className={s.button} type="submit" colorSchema="gradient">
             Войти
